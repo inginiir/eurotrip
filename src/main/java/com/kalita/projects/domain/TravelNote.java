@@ -1,9 +1,6 @@
 package com.kalita.projects.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -17,11 +14,31 @@ public class TravelNote {
     private String note;
     private boolean isVisited;
 
-    public TravelNote(String countryDestination, Date travelDate, String note, boolean isVisited) {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
+
+    public TravelNote(String countryDestination, Date travelDate, String note, boolean isVisited, User user) {
         this.countryDestination = countryDestination;
         this.travelDate = travelDate;
         this.note = note;
         this.isVisited = isVisited;
+        this.author = user;
+    }
+
+    public TravelNote() {
+    }
+
+    public String getAuthorName() {
+        return author != null ? author.getUsername() : "<none>";
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public String getCountryDestination() {

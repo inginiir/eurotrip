@@ -12,7 +12,7 @@ public class TravelNote {
     private String countryDestination;
     private Date travelDate;
     private String note;
-    private boolean isVisited;
+    private Boolean isVisited;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -69,8 +69,8 @@ public class TravelNote {
         return isVisited;
     }
 
-    public void setVisited(boolean visited) {
-        this.isVisited = visited;
+    public void setVisited(boolean isVisited) {
+        this.isVisited = isVisited;
     }
 
     public Long getId() {

@@ -8,9 +8,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.Map;
@@ -50,7 +48,7 @@ public class GreetingController {
                                 @RequestParam String countryDestination,
                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date travelDate,
                                 @RequestParam String note,
-                                @RequestParam(value="isVisited", required = false, defaultValue = "true") boolean isVisited,
+                                @RequestParam(value="isVisited", required = false, defaultValue = "false") boolean isVisited,
                                 Map<String, Object> model) {
         TravelNote travelNote = new TravelNote(countryDestination, travelDate, note, isVisited, user);
         travelNoteRepo.save(travelNote);
@@ -59,5 +57,35 @@ public class GreetingController {
         return "main";
     }
 
+    @GetMapping("/main/{note}")
+    public String deleteNote(@PathVariable TravelNote note,
+                             Model model) {
+        travelNoteRepo.delete(note);
+        Iterable<TravelNote> travelNotes = travelNoteRepo.findAll();
+        model.addAttribute("travelNotes", travelNotes);
+        return "redirect:/main";
+    }
+
+    @GetMapping("/main/editNote/{note}")
+    public String editNote(@PathVariable TravelNote note,
+                             Model model) {
+        model.addAttribute("note", note);
+        return "noteEdit";
+    }
+
+    @PostMapping("/main/editNote/")
+    public String userSave(@RequestParam("noteId") TravelNote travelNote,
+                           @RequestParam String countryDestination,
+                           @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date travelDate,
+                           @RequestParam String note,
+                           @RequestParam(value="isVisited", required = false, defaultValue = "false") Boolean isVisited) {
+
+        travelNote.setCountryDestination(countryDestination);
+        travelNote.setTravelDate(travelDate);
+        travelNote.setNote(note);
+        travelNote.setVisited(isVisited);
+        travelNoteRepo.save(travelNote);
+        return "redirect:/main";
+    }
 
 }

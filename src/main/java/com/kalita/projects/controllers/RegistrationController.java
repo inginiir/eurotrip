@@ -1,22 +1,25 @@
 package com.kalita.projects.controllers;
 
-import com.kalita.projects.domain.Role;
 import com.kalita.projects.domain.User;
-import com.kalita.projects.repos.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.kalita.projects.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import java.util.Collections;
+import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
 public class RegistrationController {
 
-    @Autowired
-    UserRepo userRepo;
+    private final UserService userService;
+
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/registration")
     public String registration(Model model) {
@@ -25,16 +28,33 @@ public class RegistrationController {
     }
 
     @PostMapping("/registration")
-    public String addUser(User user, Map<String, Object> model) {
-        User userFromDB = userRepo.findByUsername(user.getUsername());
-        if (userFromDB != null) {
-            model.put("travelNote", "User already exist");
+    public String addUser(@Valid User user,
+                          BindingResult bindingResult,
+                          Model model) {
+        if (user.getPassword() != null && !user.getPassword().equals(user.getPassword2())) {
+            model.addAttribute("passwordError", "Password are different!");
+        }
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
+            model.mergeAttributes(errorsMap);
             return "registration";
         }
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        userRepo.save(user);
+        if (!userService.addUser(user)) {
+            model.addAttribute("usernameError", "User already exist");
+            return "registration";
+        }
         return "redirect:/login";
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            model.addAttribute("message", "User successfully activated");
+        } else {
+            model.addAttribute("message", "Activate code not found");
+        }
+        return "login";
     }
 
 }

@@ -26,9 +26,6 @@ public class TravelNote {
         this.author = user;
     }
 
-    public TravelNote() {
-    }
-
     public String getAuthorName() {
         return author != null ? author.getUsername() : "<none>";
     }
@@ -77,7 +74,4 @@ public class TravelNote {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

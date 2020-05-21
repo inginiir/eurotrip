@@ -3,6 +3,7 @@ package com.kalita.projects.service;
 import com.kalita.projects.domain.Role;
 import com.kalita.projects.domain.User;
 import com.kalita.projects.repos.UserRepo;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,7 +23,7 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepo userRepo, MailSender mailSender, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepo userRepo, MailSender mailSender, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.mailSender = mailSender;
         this.passwordEncoder = passwordEncoder;

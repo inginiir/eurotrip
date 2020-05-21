@@ -2,7 +2,6 @@
 
 <@c.page>
     Travel note editor
-    <a href="/main">Main page</a>
     <form action="/main/editNote/" method="post">
         <input type="text" name="countryDestination" value="${note.countryDestination}">
         <input type="date" name="travelDate" value="${note.travelDate?date?iso_utc!""}">

@@ -92,6 +92,10 @@ public class User implements UserDetails {
         return isActive;
     }
 
+    public boolean isAdmin() {
+        return roles.contains(Role.ADMIN);
+    }
+
     public String getPassword2() {
         return password2;
     }

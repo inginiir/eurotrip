@@ -1,42 +1,95 @@
 <#import "parts/common.ftl" as c>
-<#import "parts/login.ftl" as s>
+<#include "parts/security.ftl">
 
 <@c.page>
-    <div>
-        <@s.logout />
-        <span> <a href="/user"> User list </a> </span>
-    </div>
     <div><h1>In developing...</h1></div>
-    <div>
-        <form method="post">
-            <label><input type="text" name="countryDestination" placeholder="Enter destination country"/></label>
-            <label><input type="date" name="travelDate" value="2020-01-01"/> </label>
-            <label><input type="text" name="note" placeholder="Enter some note"/></label>
-            <label><input type="checkbox" name="isVisited" value="true"></label>
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
-            <button type="submit">Add</button>
-        </form>
-    </div>
-    <div>List of message
-    <form method="get" action="main">
-        <input type="text" name="filter" value="${filter!""}">
-        <button type="submit">Find</button>
-    </form>
-    <#list travelNotes as note>
-        <div>
-            <form method="post" action="main">
-<#--                <#if note.authorName=user.username ><a href="/main/${note.id}">x</a><#else>x</#if>-->
-                <a href="/main/${note.id}">x</a>
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <form class="form-inline" method="get" action="main">
+                <input type="text" class="form-control" name="filter" placeholder="Search by country"
+                       value="${filter!""}">
+                <button type="submit" class="btn btn-primary ml-2">Search</button>
             </form>
-            <span>${note.countryDestination}</span>
-            <i><#if note.travelDate??>  ${note.travelDate?date} <#else > no date</#if></i>
-            <b>${note.note}</b>
-            <b><input type="checkbox" name="isVisited" <#if note.visited>checked<#else></#if>></b>
-            <strong>${note.authorName}</strong>
-            <a href="/main/editNote/${note.id}">Edit</a>
-<#--            <#if note.authorName=user.username ><a href="/main/edit/${note.id}">Edit</a><#else>x</#if>-->
         </div>
-    <#else>
-        No messages
-    </#list>
+    </div>
+    <a class="btn btn-primary mb-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+       aria-controls="collapseExample">
+        Add new travel note
+    </a>
+    <div class="collapse <#if travelNote??>show</#if>" id="collapseExample">
+        <div class="form-group mt-3">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="text" class="form-control ${(countryDestinationError??)?string('is-invalid', '')}"
+                           value="<#if travelNote??>${travelNote.countryDestination}</#if>" name="countryDestination"
+                           placeholder="Enter country destination"/>
+                    <#if countryDestintionError??>
+                        <div class="invalid-feedback">
+                            ${countryDestintionError}
+                        </div>
+                    </#if>
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-control ${(travelDateError??)?string('is-invalid', '')}"
+                           value="<#if travelNote??>${travelNote.travelDate?date}</#if>" name="travelDate"
+                           placeholder="Choose date"/>
+                    <#if travelDateError??>
+                        <div class="invalid-feedback">
+                            ${travelDateError}
+                        </div>
+                    </#if>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control ${(noteError??)?string('is-invalid', '')}"
+                           value="<#if travelNote??>${travelNote.note}</#if>" name="note"
+                           placeholder="Enter note"/>
+                    <#if noteError??>
+                        <div class="invalid-feedback">
+                            ${noteError}
+                        </div>
+                    </#if>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" class="form-control"
+                           value="true" name="isVisited">
+                </div>
+                <div class="form-group">
+                    <div class="custom-file">
+                        <input type="file" name="file" id="customFile">
+                        <label class="custom-file-label " for="customFile">Choose file</label>
+                    </div>
+                </div>
+
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card-columns">
+        <#list travelNotes as note>
+            <div class="card my-3">
+                <#if note.filename??>
+                    <img src="/img/${note.filename}" class="card-img-top">
+                </#if>
+                <div class="m-2">
+                    <span>${note.countryDestination}</span>
+                    <i>${note.note}</i>
+                    <i><#if note.travelDate??>  ${note.travelDate?date} <#else > no date</#if></i>
+                    <b><#if note.visited>Visited<#else>Not visited</#if></b>
+                </div>
+                <div class="card-footer text-muted">
+                    ${note.authorName}
+                    <#if note.authorName=name ><a href="/main/editNote/${note.id}">Edit</a><#else>x</#if>
+                    <form method="post" action="main">
+                        <#if note.authorName=name || isAdmin ><a href="/main/${note.id}">x</a><#else>x</#if>
+                    </form>
+                </div>
+            </div>
+        <#else>
+            No messages
+        </#list>
+    </div>
 </@c.page>

@@ -30,14 +30,9 @@
                     </#if>
                 </div>
                 <div class="form-group">
-                    <input type="date" class="form-control ${(travelDateError??)?string('is-invalid', '')}"
-                           value="<#if travelNote??>${travelNote.travelDate?date}</#if>" name="travelDate"
+                    <input type="date" class="form-control"
+                           value="2020-01-01" name="travelDate"
                            placeholder="Choose date"/>
-                    <#if travelDateError??>
-                        <div class="invalid-feedback">
-                            ${travelDateError}
-                        </div>
-                    </#if>
                 </div>
                 <div class="form-group">
                     <input type="text" class="form-control ${(noteError??)?string('is-invalid', '')}"
@@ -55,11 +50,10 @@
                 </div>
                 <div class="form-group">
                     <div class="custom-file">
-                        <input type="file" name="file" id="customFile">
+                        <input type="file" name="file" id="customFile" >
                         <label class="custom-file-label " for="customFile">Choose file</label>
                     </div>
                 </div>
-
                 <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -75,17 +69,16 @@
                     <img src="/img/${note.filename}" class="card-img-top">
                 </#if>
                 <div class="m-2">
-                    <span>${note.countryDestination}</span>
-                    <i>${note.note}</i>
-                    <i><#if note.travelDate??>  ${note.travelDate?date} <#else > no date</#if></i>
-                    <b><#if note.visited>Visited<#else>Not visited</#if></b>
+                    <h5>${note.countryDestination}</h5><br/>
+                    <i>${note.note}</i><br/>
+                    <i><#if note.travelDate??>  ${note.travelDate?date} <#else > no date</#if></i><br/>
+                    <b><#if note.visited>Visited<#else>Not visited</#if></b><br/>
+                    <a href="#" class="btn btn-primary">Show details</a>
                 </div>
                 <div class="card-footer text-muted">
                     ${note.authorName}
-                    <#if note.authorName=name ><a href="/main/editNote/${note.id}">Edit</a><#else>x</#if>
-                    <form method="post" action="main">
-                        <#if note.authorName=name || isAdmin ><a href="/main/${note.id}">x</a><#else>x</#if>
-                    </form>
+                    <#if note.authorName=name ><a href="/main/editNote/${note.id}">Edit</a><#else></#if>
+                    <#if note.authorName=name || isAdmin ><a href="/main/${note.id}">Delete</a><#else></#if>
                 </div>
             </div>
         <#else>

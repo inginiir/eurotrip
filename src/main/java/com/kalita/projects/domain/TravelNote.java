@@ -1,7 +1,6 @@
 package com.kalita.projects.domain;
 
 import org.hibernate.validator.constraints.Length;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -13,35 +12,21 @@ public class TravelNote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Please fill the field")
+    @NotBlank(message = "Please fill the country")
     @Length(max = 2048, message = "Note too long (more 2kB)")
     private String countryDestination;
-    //@NotBlank(message = "Please select the travel date")
     private Date travelDate;
     @NotBlank(message = "Please fill the travel note")
     @Length(max = 2048, message = "Note too long (more 2kB)")
     private String note;
     private Boolean isVisited;
     private String filename;
-
-    public TravelNote() {
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Boolean getVisited() {
-        return isVisited;
-    }
-
-    public void setVisited(Boolean visited) {
-        isVisited = visited;
-    }
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
+
+    public TravelNote() {
+    }
 
     public TravelNote(String countryDestination, Date travelDate, String note, boolean isVisited, User user) {
         this.countryDestination = countryDestination;
@@ -49,6 +34,10 @@ public class TravelNote {
         this.note = note;
         this.isVisited = isVisited;
         this.author = user;
+    }
+
+    public Boolean getVisited() {
+        return isVisited;
     }
 
     public String getAuthorName() {
@@ -89,6 +78,10 @@ public class TravelNote {
 
     public boolean isVisited() {
         return isVisited;
+    }
+
+    public void setVisited(Boolean visited) {
+        isVisited = visited;
     }
 
     public void setVisited(boolean isVisited) {

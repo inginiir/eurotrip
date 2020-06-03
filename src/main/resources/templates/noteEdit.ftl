@@ -1,15 +1,45 @@
 <#import "parts/common.ftl" as c>
 
 <@c.page>
-    Travel note editor
+    <h1>Travel note editor</h1>
     <form action="/main/editNote/" method="post">
-        <input type="text" name="countryDestination" value="${note.countryDestination}">
-        <input type="date" name="travelDate" value="${note.travelDate?date?iso_utc!""}">
-        <input type="text" name="note" value="${note.note}">
-        <input type="checkbox" name="isVisited" value="true" ${note.visited?string("checked", "")}/>
-
-        <input type="hidden" value="${note.id}" name="noteId">
-        <input type="hidden" value="${_csrf.token}" name="_csrf">
-        <button type="submit">Save</button>
+        <div class="form-group mt-3">
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <input type="text" class="form-control ${(countryDestinationError??)?string('is-invalid', '')}"
+                           value="<#if note??>${note.countryDestination}</#if>" name="countryDestination"
+                           placeholder="Enter country destination"/>
+                    <#if countryDestintionError??>
+                        <div class="invalid-feedback">
+                            ${countryDestintionError}
+                        </div>
+                    </#if>
+                </div>
+                <div class="form-group">
+                    <input type="date" class="form-control"
+                           value="${note.travelDate?date?iso_utc!""}" name="travelDate"
+                           placeholder="Choose date"/>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control ${(noteError??)?string('is-invalid', '')}"
+                           value="<#if note??>${note.note}</#if>" name="note"
+                           placeholder="Enter note"/>
+                    <#if noteError??>
+                        <div class="invalid-feedback">
+                            ${noteError}
+                        </div>
+                    </#if>
+                </div>
+                <div class="form-group">
+                    <input type="checkbox" class="form-control"
+                           value="true" name="isVisited" ${note.visited?string("checked", "")} />
+                </div>
+                <input type="hidden" value="${note.id}" name="noteId">
+                <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
     </form>
 </@c.page>

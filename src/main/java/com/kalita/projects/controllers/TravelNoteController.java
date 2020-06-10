@@ -4,7 +4,6 @@ import com.kalita.projects.domain.TravelNote;
 import com.kalita.projects.domain.User;
 import com.kalita.projects.service.TravelNoteService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,19 +17,18 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
 @Controller
-public class GreetingController {
+public class TravelNoteController {
 
     @Value("${upload.path}")
     private String uploadPath;
 
     private final TravelNoteService travelNoteService;
 
-    public GreetingController(TravelNoteService travelNoteService) {
+    public TravelNoteController(TravelNoteService travelNoteService) {
         this.travelNoteService = travelNoteService;
     }
 
@@ -59,9 +57,7 @@ public class GreetingController {
                                 BindingResult bindingResult,
                                 Model model,
                                 @RequestParam("file") MultipartFile file) throws IOException {
-        if (travelNote.getVisited() == null) {
-            travelNote.setVisited(false);
-        }
+
         travelNote.setAuthor(user);
 
         if (bindingResult.hasErrors()) {
@@ -69,15 +65,18 @@ public class GreetingController {
             model.mergeAttributes(errorsMap);
             model.addAttribute("travelNote", travelNote);
         } else {
-            if (file != null && !file.getOriginalFilename().isEmpty()) {
+            if (file != null && file.getOriginalFilename() != null && !file.getOriginalFilename().isEmpty()) {
                 File uploadFolder = new File(uploadPath);
+                boolean mkdir = true;
                 if (!uploadFolder.exists()) {
-                    uploadFolder.mkdir();
+                    mkdir = uploadFolder.mkdir();
                 }
-                String uuidFile = UUID.randomUUID().toString();
-                String resultFileName = uuidFile + "." + file.getOriginalFilename();
-                file.transferTo(new File(uploadPath + "/" + resultFileName));
-                travelNote.setFilename(resultFileName);
+                if (mkdir) {
+                    String uuidFile = UUID.randomUUID().toString();
+                    String resultFileName = uuidFile + "." + file.getOriginalFilename();
+                    file.transferTo(new File(uploadPath + "/" + resultFileName));
+                    travelNote.setFilename(resultFileName);
+                }
             }
             model.addAttribute("travelNote", null);
             travelNoteService.save(travelNote);
@@ -98,7 +97,8 @@ public class GreetingController {
 
     @GetMapping("/main/editNote/{note}")
     public String editNote(@PathVariable TravelNote note,
-                           Model model) {
+                           Model model
+    ) {
         model.addAttribute("note", note);
         return "noteEdit";
     }
@@ -106,14 +106,12 @@ public class GreetingController {
     @PostMapping("/main/editNote/")
     public String travelNoteSave(@RequestParam("noteId") TravelNote travelNote,
                                  @RequestParam String countryDestination,
-                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date travelDate,
-                                 @RequestParam String note,
-                                 @RequestParam(value = "isVisited", required = false, defaultValue = "false") Boolean isVisited) {
-
-        travelNote.setCountryDestination(countryDestination);
-        travelNote.setTravelDate(travelDate);
+                                 //@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date travelDate,
+                                 @RequestParam String note
+                                 //@RequestParam(value = "isVisited", required = false, defaultValue = "false") Boolean isVisited
+    ) {
+        travelNote.setNameNote(countryDestination);
         travelNote.setNote(note);
-        travelNote.setVisited(isVisited);
         travelNoteService.save(travelNote);
         return "redirect:/main";
     }

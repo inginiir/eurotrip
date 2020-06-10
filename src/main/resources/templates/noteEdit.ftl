@@ -6,20 +6,20 @@
         <div class="form-group mt-3">
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" class="form-control ${(countryDestinationError??)?string('is-invalid', '')}"
-                           value="<#if note??>${note.countryDestination}</#if>" name="countryDestination"
+                    <input type="text" class="form-control ${(nameNoteError??)?string('is-invalid', '')}"
+                           value="<#if note??>${note.nameNote}</#if>" name="countryDestination"
                            placeholder="Enter country destination"/>
-                    <#if countryDestintionError??>
+                    <#if nameNoteError??>
                         <div class="invalid-feedback">
-                            ${countryDestintionError}
+                            ${nameNoteError}
                         </div>
                     </#if>
                 </div>
-                <div class="form-group">
-                    <input type="date" class="form-control"
-                           value="${note.travelDate?date?iso_utc!""}" name="travelDate"
-                           placeholder="Choose date"/>
-                </div>
+<#--                <div class="form-group">-->
+<#--                    <input type="date" class="form-control"-->
+<#--                           value="${note.travelDate?date?iso_utc!""}" name="travelDate"-->
+<#--                           placeholder="Choose date"/>-->
+<#--                </div>-->
                 <div class="form-group">
                     <input type="text" class="form-control ${(noteError??)?string('is-invalid', '')}"
                            value="<#if note??>${note.note}</#if>" name="note"
@@ -30,10 +30,10 @@
                         </div>
                     </#if>
                 </div>
-                <div class="form-group">
-                    <input type="checkbox" class="form-control"
-                           value="true" name="isVisited" ${note.visited?string("checked", "")} />
-                </div>
+<#--                <div class="form-group">-->
+<#--                    <input type="checkbox" class="form-control"-->
+<#--                           value="true" name="isVisited" ${note.visited?string("checked", "")} />-->
+<#--                </div>-->
                 <input type="hidden" value="${note.id}" name="noteId">
                 <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                 <div class="form-group">

@@ -16,7 +16,7 @@ public class TravelNoteService {
 
     public Iterable<TravelNote> showFilteringNotes(String filter) {
         if (filter != null && !filter.isEmpty()) {
-            return noteRepo.findByCountryDestination(filter);
+            return noteRepo.findByNameNote(filter);
         } else {
             return noteRepo.findAll();
         }

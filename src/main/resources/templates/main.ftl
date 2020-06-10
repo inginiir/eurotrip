@@ -6,7 +6,7 @@
     <div class="form-row">
         <div class="form-group col-md-6">
             <form class="form-inline" method="get" action="main">
-                <input type="text" class="form-control" name="filter" placeholder="Search by country"
+                <input type="text" class="form-control" name="filter" placeholder="Search by note"
                        value="${filter!""}">
                 <button type="submit" class="btn btn-primary ml-2">Search</button>
             </form>
@@ -20,20 +20,20 @@
         <div class="form-group mt-3">
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" class="form-control ${(countryDestinationError??)?string('is-invalid', '')}"
-                           value="<#if travelNote??>${travelNote.countryDestination}</#if>" name="countryDestination"
-                           placeholder="Enter country destination"/>
-                    <#if countryDestintionError??>
+                    <input type="text" class="form-control ${(nameNoteError??)?string('is-invalid', '')}"
+                           value="<#if travelNote??>${travelNote.nameNote}</#if>" name="nameNote"
+                           placeholder="Enter name of note"/>
+                    <#if nameNoteError??>
                         <div class="invalid-feedback">
-                            ${countryDestintionError}
+                            ${nameNoteError}
                         </div>
                     </#if>
                 </div>
-                <div class="form-group">
-                    <input type="date" class="form-control"
-                           value="2020-01-01" name="travelDate"
-                           placeholder="Choose date"/>
-                </div>
+<#--                <div class="form-group">-->
+<#--                    <input type="date" class="form-control"-->
+<#--                           value="2020-01-01" name="travelDate"-->
+<#--                           placeholder="Choose date"/>-->
+<#--                </div>-->
                 <div class="form-group">
                     <input type="text" class="form-control ${(noteError??)?string('is-invalid', '')}"
                            value="<#if travelNote??>${travelNote.note}</#if>" name="note"
@@ -44,10 +44,10 @@
                         </div>
                     </#if>
                 </div>
-                <div class="form-group">
-                    <input type="checkbox" class="form-control"
-                           value="true" name="isVisited">
-                </div>
+<#--                <div class="form-group">-->
+<#--                    <input type="checkbox" class="form-control"-->
+<#--                           value="true" name="isVisited">-->
+<#--                </div>-->
                 <div class="form-group">
                     <div class="custom-file">
                         <input type="file" name="file" id="customFile" >
@@ -69,11 +69,11 @@
                     <img src="/img/${note.filename}" class="card-img-top">
                 </#if>
                 <div class="m-2">
-                    <h5>${note.countryDestination}</h5><br/>
+                    <h5>${note.nameNote}</h5><br/>
                     <i>${note.note}</i><br/>
-                    <i><#if note.travelDate??>  ${note.travelDate?date} <#else > no date</#if></i><br/>
-                    <b><#if note.visited>Visited<#else>Not visited</#if></b><br/>
-                    <a href="#" class="btn btn-primary">Show details</a>
+<#--                    <i><#if note.travelDate??>  ${note.travelDate?date} <#else > no date</#if></i><br/>-->
+<#--                    <b><#if note.visited>Visited<#else>Not visited</#if></b><br/>-->
+                    <a href="/ticket" class="btn btn-primary">Show details</a>
                 </div>
                 <div class="card-footer text-muted">
                     ${note.authorName}

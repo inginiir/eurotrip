@@ -14,8 +14,6 @@ public class City {
     private Long id;
     private String name;
     private String code;
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "country_id")
     @JsonAlias("country_code")
     private String countryCode;
 

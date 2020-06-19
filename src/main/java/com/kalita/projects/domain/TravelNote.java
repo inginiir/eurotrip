@@ -1,6 +1,6 @@
 package com.kalita.projects.domain;
 
-import com.kalita.projects.domain.dto.Ticket;
+import com.kalita.projects.domain.dto.FlightTicket;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -25,7 +25,7 @@ public class TravelNote {
     @JoinColumn(name = "user_id")
     private User author;
     @OneToMany(mappedBy = "travelNote", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Ticket> tickets = new HashSet<>();
+    private Set<FlightTicket> tickets = new HashSet<>();
 
     public TravelNote() {
     }
@@ -81,11 +81,11 @@ public class TravelNote {
         this.id = id;
     }
 
-    public Set<Ticket> getTickets() {
+    public Set<FlightTicket> getTickets() {
         return tickets;
     }
 
-    public void setTickets(Set<Ticket> tickets) {
+    public void setTickets(Set<FlightTicket> tickets) {
         this.tickets = tickets;
     }
 }

@@ -3,7 +3,6 @@ package com.kalita.projects.domain.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import java.util.Set;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -14,8 +13,11 @@ public class Country {
     private Long id;
     private String code;
     private String name;
-//    @OneToMany(mappedBy = "countryCode", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private Set<City> cities;
+
+    public Country(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -40,14 +42,6 @@ public class Country {
     public void setName(String name) {
         this.name = name;
     }
-
-//    public Set<City> getCities() {
-//        return cities;
-//    }
-//
-//    public void setCities(Set<City> cities) {
-//        this.cities = cities;
-//    }
 
     @Override
     public String toString() {

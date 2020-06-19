@@ -2,8 +2,11 @@ package com.kalita.projects.controllers;
 
 import com.kalita.projects.domain.TravelNote;
 import com.kalita.projects.domain.User;
+import com.kalita.projects.service.CityService;
+import com.kalita.projects.service.CountryService;
 import com.kalita.projects.service.TravelNoteService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,9 +17,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
@@ -27,9 +32,13 @@ public class TravelNoteController {
     private String uploadPath;
 
     private final TravelNoteService travelNoteService;
+    private final CityService cityService;
+    private final CountryService countryService;
 
-    public TravelNoteController(TravelNoteService travelNoteService) {
+    public TravelNoteController(TravelNoteService travelNoteService, CityService cityService, CountryService countryService) {
         this.travelNoteService = travelNoteService;
+        this.cityService = cityService;
+        this.countryService = countryService;
     }
 
     @GetMapping("/")
@@ -48,6 +57,7 @@ public class TravelNoteController {
         Iterable<TravelNote> travelNotes = travelNoteService.showFilteringNotes(filter);
         model.addAttribute("filter", filter);
         model.addAttribute("travelNotes", travelNotes);
+        model.addAttribute("cities", cityService.findAll());
         return "main";
     }
 
@@ -56,7 +66,12 @@ public class TravelNoteController {
                                 @Valid TravelNote travelNote,
                                 BindingResult bindingResult,
                                 Model model,
-                                @RequestParam("file") MultipartFile file) throws IOException {
+                                @RequestParam("file") MultipartFile file,
+                                @RequestParam("departureDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date departureDate,
+                                @RequestParam("originCity") String originCity,
+                                @RequestParam("city") String[] cities,
+                                HttpServletRequest httpServletRequest
+    ) throws IOException {
 
         travelNote.setAuthor(user);
 
@@ -78,12 +93,16 @@ public class TravelNoteController {
                     travelNote.setFilename(resultFileName);
                 }
             }
+            httpServletRequest.getSession().setAttribute("travelNote", travelNote);
             model.addAttribute("travelNote", null);
             travelNoteService.save(travelNote);
         }
         Iterable<TravelNote> travelNotes = travelNoteService.findAll();
         model.addAttribute("travelNotes", travelNotes);
-        return "main";
+        httpServletRequest.getSession().setAttribute("originCity", originCity);
+        httpServletRequest.getSession().setAttribute("departureDate", departureDate);
+        httpServletRequest.getSession().setAttribute("cities", cities);
+        return "redirect:/ticket/create/";
     }
 
     @GetMapping("/main/{note}")

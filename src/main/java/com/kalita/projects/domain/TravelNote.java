@@ -14,10 +14,10 @@ public class TravelNote {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = "Please fill the country")
+    @NotBlank(message = "Please fill the field")
     @Length(max = 2048, message = "Note too long (more 2kB)")
     private String nameNote;
-    @NotBlank(message = "Please fill the travel note")
+    @NotBlank(message = "Please fill the field")
     @Length(max = 2048, message = "Note too long (more 2kB)")
     private String note;
     private String filename;

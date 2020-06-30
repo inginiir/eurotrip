@@ -53,8 +53,14 @@ public class TravelNoteController {
 
     @GetMapping("/main")
     public String main(@RequestParam(required = false, defaultValue = "") String filter,
-                       Model model) {
+                       Model model,
+                       HttpServletRequest httpServletRequest
+    ) {
         Iterable<TravelNote> travelNotes = travelNoteService.showFilteringNotes(filter);
+        String errorMessageTicket = (String) httpServletRequest.getSession().getAttribute("ticketError");
+        String errorMessageCity = (String) httpServletRequest.getSession().getAttribute("cityError");
+        model.addAttribute("ticketError", errorMessageTicket);
+        model.addAttribute("cityError", errorMessageCity);
         model.addAttribute("filter", filter);
         model.addAttribute("travelNotes", travelNotes);
         model.addAttribute("cities", cityService.findAll());
@@ -69,7 +75,7 @@ public class TravelNoteController {
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam("departureDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date departureDate,
                                 @RequestParam("originCity") String originCity,
-                                @RequestParam("city") String[] cities,
+                                @RequestParam(required = false, name = "city") String[] cities,
                                 HttpServletRequest httpServletRequest
     ) throws IOException {
 
@@ -79,6 +85,14 @@ public class TravelNoteController {
             Map<String, String> errorsMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorsMap);
             model.addAttribute("travelNote", travelNote);
+            model.addAttribute("cities", cityService.findAll());
+            model.addAttribute("travelNotes", travelNoteService.findAll());
+            return "main";
+        } else if (originCity.isEmpty() || cities.length == 0) {
+            model.addAttribute("cityError", "Please enter at least 2 cities: yours and which you would like to visit in the field below");
+            model.addAttribute("cities", cityService.findAll());
+            model.addAttribute("travelNotes", travelNoteService.findAll());
+            return "main";
         } else {
             if (file != null && file.getOriginalFilename() != null && !file.getOriginalFilename().isEmpty()) {
                 File uploadFolder = new File(uploadPath);
@@ -95,10 +109,9 @@ public class TravelNoteController {
             }
             httpServletRequest.getSession().setAttribute("travelNote", travelNote);
             model.addAttribute("travelNote", null);
-            travelNoteService.save(travelNote);
+            //travelNoteService.save(travelNote);
         }
-        Iterable<TravelNote> travelNotes = travelNoteService.findAll();
-        model.addAttribute("travelNotes", travelNotes);
+        model.addAttribute("travelNotes", travelNoteService.findAll());
         httpServletRequest.getSession().setAttribute("originCity", originCity);
         httpServletRequest.getSession().setAttribute("departureDate", departureDate);
         httpServletRequest.getSession().setAttribute("cities", cities);

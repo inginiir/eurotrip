@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.text.DateFormat;
@@ -66,6 +65,9 @@ public class TicketService {
             String[] cities,
             TravelNote travelNote
     ) throws CityNotFoundException, NoSuchElementException {
+        if (departureDate == null) {
+            departureDate = new Date();
+        }
         String dateOfFlight = getStringDate(departureDate);
         List<String> cityCodes = new ArrayList<>();
         String codeOriginCity = getCityCode(originCity);
@@ -113,9 +115,6 @@ public class TicketService {
     }
 
     private String getStringDate(Date departureDate) {
-        if (departureDate == null) {
-            departureDate = new Date();
-        }
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return dateFormat.format(departureDate);
     }

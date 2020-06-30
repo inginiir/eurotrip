@@ -2,7 +2,12 @@
 <#include "parts/security.ftl">
 
 <@c.page>
-    <div><h1>In developing...</h1></div>
+    <div><h1>In developing...</h1>
+        <p>Disclaimer! The service uses data from the Aviasales cache. This means that the database stores tickets that
+            are searched by users of Aviasales. In the future, it is planned to switch to API Yandex.raspisaniya and add
+            a
+            search for tickets for trains, buses and trains. Also will be added search for tickets in real time</p>
+    </div>
     <div class="form-row">
         <div class="form-group col-md-6">
             <form class="form-inline" method="get" action="main">
@@ -50,15 +55,25 @@
 
 
                 <div class="form-group" ID="items">
-                    <input  class="form-control ${(originCityError??)?string('is-invalid', '')}" name="originCity"
+                    <input class="form-control ${(cityError??||ticketError??)?string('is-invalid', '')}"
+                           name="originCity"
                            list="citiesList" placeholder="Enter your city">
                     <datalist id="citiesList">
                         <#if cities??>
                         <#list cities as city>
-                        <option value="${city.name}/${city.countryCode}"><br>
+                        <option value="<#if city??>${city.name}/${city.countryCode}<#else></#if>"><br>
                             </#list>
                             </#if>
                     </datalist>
+                    <#if cityError??>
+                        <div class="invalid-feedback">
+                            ${cityError}
+                        </div>
+                    <#elseif ticketError??>
+                        <div class="invalid-feedback">
+                            ${ticketError}
+                        </div>
+                    </#if>
                     <input type="date" class="form-control mt-3"
                            value="2020-07-01" name="departureDate"
                            placeholder="Choose date"/><br>
@@ -74,7 +89,6 @@
             </form>
         </div>
     </div>
-
     <div class="card-columns">
         <#list travelNotes as note>
             <div class="card my-3">
@@ -95,8 +109,9 @@
                 </div>
             </div>
         <#else>
-            No messages
+            No notes
         </#list>
+
     </div>
     <script type="text/javascript">
         var items = 0;
@@ -119,9 +134,3 @@
         }
     </script>
 </@c.page>
-
-
-
-
-
-</datalist>

@@ -173,6 +173,11 @@ public class TicketService {
         }
     }
 
+    public void fillDatabaseCitiesAndCountries() {
+        saveCountriesToDatabase();
+        saveCitiesToDatabase();
+    }
+
     private void saveCountriesToDatabase() {
         Country[] countries = restTemplate.getForObject("http://api.travelpayouts.com/data/ru/countries.json",
                 Country[].class);

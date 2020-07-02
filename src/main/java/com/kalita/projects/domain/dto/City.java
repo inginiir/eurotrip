@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -16,6 +17,9 @@ public class City {
     private String code;
     @JsonAlias("country_code")
     private String countryCode;
+
+    public City() {
+    }
 
     public String getName() {
         return name;
@@ -47,6 +51,20 @@ public class City {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Objects.equals(name, city.name) &&
+                Objects.equals(countryCode, city.countryCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, countryCode);
     }
 
     @Override

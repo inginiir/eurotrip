@@ -22,4 +22,8 @@ public class CountryService {
     public Country findByCode(String code) {
         return countryRepo.findByCode(code);
     }
+
+    public Iterable<Country> findAll() {
+        return countryRepo.findAll();
+    }
 }

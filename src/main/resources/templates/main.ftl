@@ -5,8 +5,7 @@
     <div><h1>In developing...</h1>
         <p>Disclaimer! The service uses data from the Aviasales cache. This means that the database stores tickets that
             are searched by users of Aviasales. In the future, it is planned to switch to API Yandex.raspisaniya and add
-            a
-            search for tickets for trains, buses and trains. Also will be added search for tickets in real time</p>
+            a search for tickets for trains and buses. Also will be added search for tickets in real time</p>
     </div>
     <div class="form-row">
         <div class="form-group col-md-6">
@@ -25,12 +24,17 @@
         <div class="form-group mt-3">
             <form method="post" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="text" class="form-control ${(nameNoteError??)?string('is-invalid', '')}"
+                    <input type="text"
+                           class="form-control ${(nameNoteError??||activationError??)?string('is-invalid', '')}"
                            value="<#if travelNote??>${travelNote.nameNote}</#if>" name="nameNote"
                            placeholder="Enter name of note"/>
                     <#if nameNoteError??>
                         <div class="invalid-feedback">
                             ${nameNoteError}
+                        </div>
+                    <#elseif activationError??>
+                        <div class="invalid-feedback">
+                            ${activationError}
                         </div>
                     </#if>
                 </div>
@@ -57,7 +61,7 @@
                 <div class="form-group" ID="items">
                     <input class="form-control ${(cityError??||ticketError??)?string('is-invalid', '')}"
                            name="originCity"
-                           list="citiesList" placeholder="Enter your city">
+                           list="citiesList" placeholder="Choose your city/country code">
                     <datalist id="citiesList">
                         <#if cities??>
                         <#list cities as city>
@@ -89,29 +93,7 @@
             </form>
         </div>
     </div>
-    <div class="card-columns">
-        <#list travelNotes as note>
-            <div class="card my-3">
-                <#if note.filename??>
-                    <img src="/img/${note.filename}" class="card-img-top">
-                </#if>
-                <div class="m-2">
-                    <h5>${note.nameNote}</h5><br/>
-                    <i>${note.note}</i><br/>
-                    <#--                    <i><#if note.travelDate??>  ${note.travelDate?date} <#else > no date</#if></i><br/>-->
-                    <#--                    <b><#if note.visited>Visited<#else>Not visited</#if></b><br/>-->
-                    <a href="/ticket/${note.id}" class="btn btn-primary">Show details</a>
-                </div>
-                <div class="card-footer text-muted">
-                    ${note.authorName}
-                    <#if note.authorName=name ><a href="/main/editNote/${note.id}">Edit</a><#else></#if>
-                    <#if note.authorName=name || isAdmin ><a href="/main/${note.id}">Delete</a><#else></#if>
-                </div>
-            </div>
-        <#else>
-            No notes
-        </#list>
-
+    <#include "parts/notesList.ftl"/>
     </div>
     <script type="text/javascript">
         var items = 0;
@@ -120,7 +102,7 @@
             div = document.getElementById("items");
             button = document.getElementById("add");
             items++;
-            newitem = "<input class=\"form-control mt-3${(cityError??)?string('is-invalid', '')}\" list=\"citiesL\" name=\"city\" placeholder=\"Enter city " + items + "\">";
+            newitem = "<input class=\"form-control mt-3${(cityError??)?string('is-invalid', '')}\" list=\"citiesL\" name=\"city\" placeholder=\"Choose city/country code " + items + "\">";
             newitem += "<datalist id=\"citiesL\">";
             newitem += "<#if cities??>";
             newitem += "<#list cities as city>";

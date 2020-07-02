@@ -1,11 +1,4 @@
 <#macro login path isRegisterForm>
-<#--    <form action="${path}" method="post" xmlns="http://www.w3.org/1999/html">-->
-<#--        <div><label> User Name : <input type="text" name="username"/> </label></div>-->
-<#--        <div><label> Password: <input type="password" name="password"/> </label></div>-->
-<#--        <input type="hidden" name="_csrf" value="${_csrf.token}"/>-->
-<#--        <div><input type="submit" value="Sign In"/></div>-->
-<#--    </form>-->
-<#--</#macro>-->
 <form action="${path}" method="post" xmlns="http://www.w3.org/1999/html">
         <div class="form-group row">
             <label class="col-sm-2 col-form-label"> User Name: </label>

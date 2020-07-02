@@ -82,17 +82,26 @@ public class UserService implements UserDetailsService {
         return userRepo.findAll();
     }
 
-    public void saveUser(User user, String username, Map<String, String> form) {
-        user.setUsername(username);
+    public void saveUser(
+            User user,
+            String username,
+            Map<String, String> form
+    ) {
+        if (!StringUtils.isEmpty(username)) {
+            user.setUsername(username);
+        }
 
         Set<String> roles = Arrays.stream(Role.values())
                 .map(Role::name)
                 .collect(Collectors.toSet());
 
-        user.getRoles().clear();
-        for (String key : form.keySet()) {
-            if (roles.contains(key)) {
-                user.getRoles().add(Role.valueOf(key));
+        if (user.getRoles() != null) {
+            user.getRoles().clear();
+
+            for (String key : form.keySet()) {
+                if (roles.contains(key)) {
+                    user.getRoles().add(Role.valueOf(key));
+                }
             }
         }
         userRepo.save(user);
@@ -101,7 +110,7 @@ public class UserService implements UserDetailsService {
     public void updateProfile(User user, String password, String email) {
         String userEmail = user.getEmail();
         boolean isEmailChanged = (email != null && !email.equals(userEmail)) ||
-                (userEmail != null && userEmail.equals(email));
+                (userEmail != null && !userEmail.equals(email));
         if (isEmailChanged) {
             user.setEmail(email);
             if (!StringUtils.isEmpty(email)) {

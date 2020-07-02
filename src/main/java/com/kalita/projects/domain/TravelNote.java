@@ -5,14 +5,15 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class TravelNote {
+public class TravelNote implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotBlank(message = "Please fill the field")
     @Length(max = 2048, message = "Note too long (more 2kB)")
@@ -35,7 +36,6 @@ public class TravelNote {
         this.note = note;
         this.author = user;
     }
-
 
     public String getAuthorName() {
         return author != null ? author.getUsername() : "<none>";

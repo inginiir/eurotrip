@@ -13,23 +13,23 @@ public class CityService {
         this.cityRepo = cityRepo;
     }
 
-    public void saveAll(Iterable<City> cities) {
+    void saveAll(Iterable<City> cities) {
         cityRepo.saveAll(cities);
-    }
-
-    public City findByCityCode(String code) {
-        return cityRepo.findByCode(code);
-    }
-
-    public City findByName(String name) {
-        return cityRepo.findByName(name);
     }
 
     public Iterable<City> findAll() {
         return cityRepo.findAll();
     }
 
-    public City findByNameAndCountryCode(String name, String countryCode) {
+    public Iterable<City> findJoinedTable() {
+        return cityRepo.findJoinTable();
+    }
+
+    City findByNameAndCountryCode(String name, String countryCode) {
         return cityRepo.findByNameAndCountryCode(name, countryCode);
+    }
+
+    public City findByCityCode(String codeCity) {
+        return cityRepo.findByCode(codeCity);
     }
 }

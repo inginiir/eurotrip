@@ -17,9 +17,10 @@ public class Country {
     public Country() {
     }
 
-    public Country(String code, String name) {
+    public Country(Long id, String code, String name) {
         this.code = code;
         this.name = name;
+        this.id = id;
     }
 
     public Long getId() {

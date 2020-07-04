@@ -4,3 +4,11 @@ body {
     background-attachment: fixed;
     background-size: cover;
 }
+
+.opacity {
+    opacity: 0.7 !important;
+}
+
+.colortext {
+    color: dimgrey; /* Красный цвет выделения */
+}

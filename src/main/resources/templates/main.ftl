@@ -2,16 +2,12 @@
 <#include "parts/security.ftl">
 
 <@c.page>
-    <div><h1>In developing...</h1>
-        <p>Disclaimer! The service uses data from the Aviasales cache. This means that the database stores tickets that
-            are searched by users of Aviasales. In the future, it is planned to switch to API Yandex.raspisaniya and add
-            a search for tickets for trains and buses. Also will be added search for tickets in real time</p>
-    </div>
+
     <div class="form-row">
         <div class="form-group col-md-6">
             <form class="form-inline" method="get" action="main">
                 <input type="text" class="form-control" name="filter" placeholder="Search by note"
-                       value="${filter!""}">
+                       value="${filter!""}"/>
                 <button type="submit" class="btn btn-primary ml-2">Search</button>
             </form>
         </div>
@@ -49,23 +45,27 @@
                         </div>
                     </#if>
                 </div>
-
                 <div class="form-group">
                     <div class="custom-file">
-                        <input type="file" name="file" id="customFile">
-                        <label class="custom-file-label " for="customFile">Choose file</label>
+                        <input type="file" name="file" class="custom-file-input form-control ${(fileError??)?string('is-invalid', '')}"
+                               id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"/>
+                        <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                        <#if fileError??>
+                            <div class="invalid-feedback">
+                                ${fileError}
+                            </div>
+                        </#if>
                     </div>
                 </div>
-
 
                 <div class="form-group" ID="items">
                     <input class="form-control ${(cityError??||ticketError??)?string('is-invalid', '')}"
                            name="originCity"
-                           list="citiesList" placeholder="Choose your city/country code">
+                           list="citiesList" placeholder="Choose your city"/>
                     <datalist id="citiesList">
                         <#if cities??>
                         <#list cities as city>
-                        <option value="<#if city??>${city.name}/${city.countryCode}<#else></#if>"><br>
+                        <option value="<#if city??>${city.name}(${city.code}), ${city.countryCode}<#else></#if>"/><br></br>
                             </#list>
                             </#if>
                     </datalist>
@@ -80,9 +80,11 @@
                     </#if>
                     <input type="date" class="form-control mt-3"
                            value="2020-07-01" name="departureDate"
-                           placeholder="Choose date"/><br>
-                    <p>Enter cities, which you would like to visit</p>
-                    <input type="button" class="btn btn-primary mt-3" value="Add city" onClick="AddItem();" ID="add">
+                           placeholder="Choose date"/><br></br>
+                    <div class="alert alert-primary" role="alert">
+                        Enter cities, which you would like to visit
+                    </div>
+                    <input type="button" class="btn btn-primary mt-3" value="Add city" onClick="AddItem();" ID="add"/>
                 </div>
 
 
@@ -94,7 +96,7 @@
         </div>
     </div>
     <#include "parts/notesList.ftl"/>
-    </div>
+ 
     <script type="text/javascript">
         var items = 0;
 
@@ -102,11 +104,11 @@
             div = document.getElementById("items");
             button = document.getElementById("add");
             items++;
-            newitem = "<input class=\"form-control mt-3${(cityError??)?string('is-invalid', '')}\" list=\"citiesL\" name=\"city\" placeholder=\"Choose city/country code " + items + "\">";
-            newitem += "<datalist id=\"citiesL\">";
+            newitem = "<input class='form-control mt-3${(cityError??)?string('is-invalid', '')}' list='citiesL' name='city' placeholder='Choose city " + items + "'/>";
+            newitem += "<datalist id='citiesL'>";
             newitem += "<#if cities??>";
             newitem += "<#list cities as city>";
-            newitem += "<option value=\"${city.name}/${city.countryCode}\"><br>";
+            newitem += "<option value='${city.name}(${city.code})&sbquo; ${city.countryCode}'/><br></br>";
             newitem += "</#list>";
             newitem += "</#if>";
             newitem += "</datalist>";

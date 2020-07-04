@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 public interface TicketRepo extends CrudRepository<FlightTicket, Long> {
 
     Iterable<FlightTicket> findByTravelNoteId(Long id);
+
 }

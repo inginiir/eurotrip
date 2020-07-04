@@ -21,6 +21,16 @@ public class City {
     public City() {
     }
 
+    public City(String name, String code, String countryCode) {
+        this.name = name;
+        this.countryCode = countryCode;
+        this.code = code;
+    }
+
+    public City(String code) {
+        this.code = code;
+    }
+
     public String getName() {
         return name;
     }

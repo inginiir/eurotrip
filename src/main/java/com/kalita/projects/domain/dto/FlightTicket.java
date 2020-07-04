@@ -3,6 +3,7 @@ package com.kalita.projects.domain.dto;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kalita.projects.domain.TravelNote;
+import com.kalita.projects.service.CountryService;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -31,6 +32,14 @@ public class FlightTicket implements Comparable<FlightTicket> {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "travelNote_id")
     private TravelNote travelNote;
+    @OneToOne
+    private City cityOfDepart;
+    @OneToOne
+    private Country countryOfDepart;
+    @OneToOne
+    private City cityArrive;
+    @OneToOne
+    private Country countryArrive;
 
     public FlightTicket() {
     }
@@ -135,6 +144,38 @@ public class FlightTicket implements Comparable<FlightTicket> {
 
     public void setTravelNote(TravelNote travelNote) {
         this.travelNote = travelNote;
+    }
+
+    public City getCityOfDepart() {
+        return cityOfDepart;
+    }
+
+    public void setCityOfDepart(City cityOfDepart) {
+        this.cityOfDepart = cityOfDepart;
+    }
+
+    public Country getCountryOfDepart() {
+        return countryOfDepart;
+    }
+
+    public void setCountryOfDepart(Country countryOfDepart) {
+        this.countryOfDepart = countryOfDepart;
+    }
+
+    public City getCityArrive() {
+        return cityArrive;
+    }
+
+    public void setCityArrive(City cityArrive) {
+        this.cityArrive = cityArrive;
+    }
+
+    public Country getCountryArrive() {
+        return countryArrive;
+    }
+
+    public void setCountryArrive(Country countryArrive) {
+        this.countryArrive = countryArrive;
     }
 
     @Override

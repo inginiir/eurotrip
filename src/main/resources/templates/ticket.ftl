@@ -7,9 +7,9 @@
             <div class="card">
                 <img src="https://img7.socratify.net/de28db2e06146f8ab2_600x375.jpg" class="card-img-top">
                 <div class="card-body">
-                    <h5 class="card-title">Flying to !</h5>
-                    <p class="card-text">Flight from <b>${ticket.originCityCode}</b> to
-                    <b>${ticket.destinationCityCode}</b></p>
+                    <h5 class="card-title">Fly to travel!</h5>
+                    <p class="card-text">Flight from <b>${ticket.getCityOfDepart().name}</b> to
+                    <b>${ticket.getCityArrive().name}</b></p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Price: ${ticket.price} rub</li>

@@ -8,13 +8,10 @@ import com.kalita.projects.domain.dto.FlightTicket;
 import com.kalita.projects.domain.dto.JsonFromAviaSales;
 import com.kalita.projects.repos.TicketRepo;
 import com.kalita.projects.service.exceptions.CityNotFoundException;
-import com.kalita.projects.service.handlers.RestTemplateResponseErrorHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -48,13 +45,6 @@ public class TicketService {
         this.restTemplate = restTemplate;
     }
 
-    @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder
-                .errorHandler(new RestTemplateResponseErrorHandler())
-                .build();
-    }
-
     public Iterable<FlightTicket> findByTravelNoteId(Long id) {
         return ticketRepo.findByTravelNoteId(id);
     }
@@ -74,7 +64,9 @@ public class TicketService {
         cityCodes.add(codeOriginCity);
         for (String city : cities) {
             String codeCity = getCityCode(city);
-            cityCodes.add(codeCity);
+            if (!codeCity.isEmpty()) {
+                cityCodes.add(codeCity);
+            }
         }
         List<FlightTicket> tickets = new ArrayList<>();
         List<FlightTicket> resultFlightTicketsList = new ArrayList<>();
@@ -82,13 +74,17 @@ public class TicketService {
         String codeCityOfDepart = codeOriginCity;
         while (cityCodes.size() > 1) {
             tickets.clear();
-            for (String codeCity : cityCodes) {
-                if (!codeCity.equals(codeCityOfDepart)) {
-                    JsonFromAviaSales monthMatrix = getMonthMatrix(codeCityOfDepart, codeCity, dateOfFlight);
+            for (String codeCurrentCityArrive : cityCodes) {
+                if (!codeCurrentCityArrive.equals(codeCityOfDepart)) {
+                    JsonFromAviaSales monthMatrix = getMonthMatrix(codeCityOfDepart, codeCurrentCityArrive, dateOfFlight);
                     currentDate = addDaysToDate(currentDate, 0);
                     FlightTicket flightTicket = monthMatrix.getCheapestFlightTicket(travelNote, currentDate);
                     if (flightTicket != null) {
                         flightTicket.setTravelNote(travelNote);
+                        flightTicket.setCityOfDepart(cityService.findByCityCode(codeCityOfDepart));
+                        flightTicket.setCountryOfDepart(countryService.findByCode(codeCityOfDepart));
+                        flightTicket.setCityArrive(cityService.findByCityCode(codeCurrentCityArrive));
+                        flightTicket.setCountryArrive(countryService.findByCode(codeCurrentCityArrive));
                         currentDate = flightTicket.getDepartureDate();
                         tickets.add(flightTicket);
                     }
@@ -102,6 +98,11 @@ public class TicketService {
         JsonFromAviaSales monthMatrixLast = getMonthMatrix(codeCityOfDepart, codeOriginCity, dateOfFlight);
         FlightTicket lastFlightTicket = monthMatrixLast.getCheapestFlightTicket(travelNote, currentDate);
         lastFlightTicket.setTravelNote(travelNote);
+        City byCityCode = cityService.findByCityCode(codeCityOfDepart);
+        lastFlightTicket.setCityOfDepart(byCityCode);
+        lastFlightTicket.setCountryOfDepart(countryService.findByCode(codeCityOfDepart));
+        lastFlightTicket.setCityArrive(cityService.findByCityCode(codeOriginCity));
+        lastFlightTicket.setCountryArrive(countryService.findByCode(codeOriginCity));
         resultFlightTicketsList.add(lastFlightTicket);
         ticketRepo.saveAll(resultFlightTicketsList);
     }
@@ -119,20 +120,18 @@ public class TicketService {
         return dateFormat.format(departureDate);
     }
 
-    private String getCityCode(String cityNameAndCountryCode) throws CityNotFoundException {
-        String[] nameAndCountryCode = cityNameAndCountryCode.split("/");
-        String cityCode = "";
-        if (nameAndCountryCode.length == 2) {
-            String cityName = nameAndCountryCode[0];
-            String countryCode = nameAndCountryCode[1];
-            City currentCity = cityService.findByNameAndCountryCode(cityName, countryCode);
-            if (currentCity == null) {
-                throw new CityNotFoundException();
-            } else {
-                cityCode = currentCity.getCode();
-            }
+    private String getCityCode(String cityNameCodeAndCountry) throws CityNotFoundException {
+        String code = "";
+        if (cityNameCodeAndCountry.matches(".*[(][A-Z]{3}[)].*")) {
+            code = cityNameCodeAndCountry
+                    .substring((cityNameCodeAndCountry.indexOf('(') + 1), cityNameCodeAndCountry.indexOf(')'));
+        } else if (cityNameCodeAndCountry.isEmpty()) {
+            return code;
+        } else {
+            throw new CityNotFoundException();
         }
-        return cityCode;
+
+        return code;
     }
 
     private JsonFromAviaSales getMonthMatrix(
@@ -149,6 +148,7 @@ public class TicketService {
 
         return restTemplate.getForObject(uri, JsonFromAviaSales.class);
     }
+
 
     private FlightTicket getCheapTicket(List<FlightTicket> flightTickets, TravelNote travelNote) {
         if (flightTickets.size() == 0)

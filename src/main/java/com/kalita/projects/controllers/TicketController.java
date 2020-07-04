@@ -52,6 +52,10 @@ public class TicketController {
         try {
             travelNoteService.save(travelNote);
             ticketService.createRoutesBetweenCities(originCity, departureDate, cities, travelNote);
+            model.addAttribute("travelNote", null);
+            httpServletRequest.getSession().removeAttribute("cityError");
+            httpServletRequest.getSession().removeAttribute("ticketError");
+            httpServletRequest.getSession().removeAttribute("travelNote");
         } catch (CityNotFoundException e) {
             travelNoteService.delete(travelNote);
             model.addAttribute("cityError", "Sorry, tickets between this cities not found, please try another cities");

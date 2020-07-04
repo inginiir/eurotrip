@@ -43,8 +43,6 @@ class UserServiceTest {
 
     @Test
     void loadUserByUsernameFail() {
-        user.setUsername("Pavel");
-        userService.addUser(user);
         Mockito.doReturn(null)
                 .when(userRepo)
                 .findByUsername("Pavel");
@@ -122,7 +120,7 @@ class UserServiceTest {
     }
 
     @Test
-    void saveUser() {
+    void shouldUpdateUsernameRolesAndSaveUser() {
         Map<String, String> form = new HashMap<>();
         form.put("USER", "USER");
         form.put("ADMIN", "ADMIN");

@@ -21,7 +21,7 @@ public class CountryService {
         return countryRepo.findAll();
     }
 
-    public Country findByCode(String code) {
+    Country findByCode(String code) {
         return countryRepo.findByCode(code);
     }
 }

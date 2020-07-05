@@ -188,7 +188,6 @@ public class TravelNoteController {
 
     @GetMapping("user-notes/{author}")
     public String userNotes(
-            @AuthenticationPrincipal User currentUser,
             @PathVariable User author,
             Model model,
             @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable

@@ -3,7 +3,10 @@ package com.kalita.projects.domain.dto;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.Objects;
 
 @Entity
@@ -27,10 +30,6 @@ public class City {
         this.code = code;
     }
 
-    public City(String code) {
-        this.code = code;
-    }
-
     public String getName() {
         return name;
     }
@@ -49,10 +48,6 @@ public class City {
 
     public String getCountryCode() {
         return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
     }
 
     public Long getId() {

@@ -1,10 +1,8 @@
 package com.kalita.projects.repos;
 
 import com.kalita.projects.domain.dto.City;
-import com.kalita.projects.domain.dto.Country;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository

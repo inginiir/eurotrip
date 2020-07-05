@@ -147,7 +147,7 @@ public class TicketService {
                 "&month=" + departureDate +
                 "&token=" + token;
 
-                                                                    return restTemplate.getForObject(uri, JsonFromAviaSales.class);
+        return restTemplate.getForObject(uri, JsonFromAviaSales.class);
     }
 
 

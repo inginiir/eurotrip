@@ -3,7 +3,6 @@ package com.kalita.projects.domain.dto;
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kalita.projects.domain.TravelNote;
-import com.kalita.projects.service.CountryService;
 
 import javax.persistence.*;
 import java.util.Date;

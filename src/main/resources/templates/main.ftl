@@ -12,6 +12,12 @@
             </form>
         </div>
     </div>
+    <div class="opacity alert alert-primary" role="alert">
+        To use the service, you need to fill out the form: enter the name and description of the travel note, select the
+        desired date and the cities you want to visit also the minimum number of days you want to spend in the city
+        . Next, the server will process your request and issue the cheapest
+        tickets between selected cities
+    </div>
     <a class="btn btn-primary mb-2" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
        aria-controls="collapseExample">
         Add new travel note
@@ -47,7 +53,8 @@
                 </div>
                 <div class="form-group">
                     <div class="custom-file">
-                        <input type="file" name="file" class="custom-file-input form-control ${(fileError??)?string('is-invalid', '')}"
+                        <input type="file" name="file"
+                               class="custom-file-input form-control ${(fileError??)?string('is-invalid', '')}"
                                id="inputGroupFile01" aria-describedby="inputGroupFileAddon01"/>
                         <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
                         <#if fileError??>
@@ -64,10 +71,11 @@
                            list="citiesList" placeholder="Choose your city"/>
                     <datalist id="citiesList">
                         <#if cities??>
-                        <#list cities as city>
-                        <option value="<#if city??>${city.name}(${city.code}), ${city.countryCode}<#else></#if>"/><br></br>
+                            <#list cities as city>
+                                <option value="<#if city??>${city.name}(${city.code}), ${city.countryCode}<#else></#if>"/>
+                                <br></br>
                             </#list>
-                            </#if>
+                        </#if>
                     </datalist>
                     <#if cityError??>
                         <div class="invalid-feedback">
@@ -80,7 +88,12 @@
                     </#if>
                     <input type="date" class="form-control mt-3"
                            value="2020-07-01" name="departureDate"
-                           placeholder="Choose date"/><br></br>
+                           placeholder="Choose date"/>
+                    <select class="form-control mb-3 mt-3" name="days" title="Choose number of days">
+                        <#list 1..30 as day>
+                            <option>${day}</option>
+                        </#list>
+                    </select>
                     <div class="alert alert-primary" role="alert">
                         Enter cities, which you would like to visit
                     </div>
@@ -96,7 +109,7 @@
         </div>
     </div>
     <#include "parts/notesList.ftl"/>
- 
+
     <script type="text/javascript">
         var items = 0;
 
@@ -104,7 +117,7 @@
             div = document.getElementById("items");
             button = document.getElementById("add");
             items++;
-            newitem = "<input class='form-control mt-3${(cityError??)?string('is-invalid', '')}' list='citiesL' name='city' placeholder='Choose city " + items + "'/>";
+            newitem = "<input class='form-control mt-3 ${(cityError??)?string('is-invalid', '')}' list='citiesL' name='city' placeholder='Choose city " + items + "'/>";
             newitem += "<datalist id='citiesL'>";
             newitem += "<#if cities??>";
             newitem += "<#list cities as city>";

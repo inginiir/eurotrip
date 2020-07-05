@@ -3,6 +3,7 @@ package com.kalita.projects.service;
 import com.kalita.projects.domain.Role;
 import com.kalita.projects.domain.User;
 import com.kalita.projects.repos.UserRepo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +23,9 @@ public class UserService implements UserDetailsService {
     private final MailSender mailSender;
 
     private final PasswordEncoder passwordEncoder;
+
+    @Value("myhostname")
+    private String host;
 
     public UserService(UserRepo userRepo, MailSender mailSender, @Lazy PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
@@ -60,10 +64,13 @@ public class UserService implements UserDetailsService {
         if (!StringUtils.isEmpty(user.getEmail())) {
             String message = String.format(
                     "Hello, %s\n" +
-                            "Welcome to EuroTrip! Please, visit next link: http://localhost:8080/activate/%s",
+                            "Welcome to EuroTrip! " +
+                            "Please, visit next link: http://%s/activate/%s",
                     user.getUsername(),
+                    host,
                     user.getActivationCode()
             );
+
             mailSender.send(user.getEmail(), "Activation code", message);
         }
     }

@@ -53,7 +53,8 @@ public class TicketService {
             String originCity,
             Date departureDate,
             String[] cities,
-            TravelNote travelNote
+            TravelNote travelNote,
+            Integer numberOfDays
     ) throws CityNotFoundException, NoSuchElementException {
         if (departureDate == null) {
             departureDate = new Date();
@@ -77,7 +78,7 @@ public class TicketService {
             for (String codeCurrentCityArrive : cityCodes) {
                 if (!codeCurrentCityArrive.equals(codeCityOfDepart)) {
                     JsonFromAviaSales monthMatrix = getMonthMatrix(codeCityOfDepart, codeCurrentCityArrive, dateOfFlight);
-                    currentDate = addDaysToDate(currentDate, 0);
+                    currentDate = addDaysToDate(currentDate, numberOfDays);
                     FlightTicket flightTicket = monthMatrix.getCheapestFlightTicket(travelNote, currentDate);
                     if (flightTicket != null) {
                         flightTicket.setTravelNote(travelNote);
@@ -146,7 +147,7 @@ public class TicketService {
                 "&month=" + departureDate +
                 "&token=" + token;
 
-        return restTemplate.getForObject(uri, JsonFromAviaSales.class);
+                                                                    return restTemplate.getForObject(uri, JsonFromAviaSales.class);
     }
 
 

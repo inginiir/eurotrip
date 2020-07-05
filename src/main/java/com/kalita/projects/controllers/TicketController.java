@@ -49,9 +49,10 @@ public class TicketController {
         Date departureDate = (Date) httpServletRequest.getSession().getAttribute("departureDate");
         String[] cities = (String[]) httpServletRequest.getSession().getAttribute("cities");
         TravelNote travelNote = (TravelNote) httpServletRequest.getSession().getAttribute("travelNote");
+        Integer numberOfDays = (Integer) httpServletRequest.getSession().getAttribute("days");
         try {
             travelNoteService.save(travelNote);
-            ticketService.createRoutesBetweenCities(originCity, departureDate, cities, travelNote);
+            ticketService.createRoutesBetweenCities(originCity, departureDate, cities, travelNote, numberOfDays);
             model.addAttribute("travelNote", null);
             httpServletRequest.getSession().removeAttribute("cityError");
             httpServletRequest.getSession().removeAttribute("ticketError");

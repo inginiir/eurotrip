@@ -2,6 +2,10 @@
 <#include "parts/security.ftl">
 
 <@c.page>
+    <div class="opacity alert alert-primary" role="alert">
+        this is overview information, for more detailed data and ticket purchase, you can visit the
+        site <a href="https://www.aviasales.ru/">aviasales.ru</a>
+    </div>
     <div class="card-columns">
         <#list tickets as ticket>
             <div class="card">
@@ -9,7 +13,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Fly to travel!</h5>
                     <p class="card-text">Flight from <b>${ticket.getCityOfDepart().name}</b> to
-                    <b>${ticket.getCityArrive().name}</b></p>
+                        <b>${ticket.getCityArrive().name}</b></p>
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Price: ${ticket.price} rub</li>
@@ -18,7 +22,8 @@
                     <li class="list-group-item">Distance between cities: ${ticket.distance} kilometres</li>
                 </ul>
                 <div class="card-footer text-muted">
-                    Date depart: ${ticket.departureDate?date}  <#if ticket.actual>Data is actual<#else>Data is not actual</#if>
+                    Date
+                    depart: ${ticket.departureDate?date}  <#if ticket.actual>Data is actual<#else>Data is not actual</#if>
                 </div>
             </div>
         <#else>

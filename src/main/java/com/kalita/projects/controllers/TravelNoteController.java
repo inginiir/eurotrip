@@ -92,6 +92,7 @@ public class TravelNoteController {
                                 @RequestParam("file") MultipartFile file,
                                 @RequestParam("departureDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date departureDate,
                                 @RequestParam("originCity") String originCity,
+                                @RequestParam("days") Integer numberOfDays,
                                 @RequestParam(required = false, name = "city") String[] cities,
                                 @PageableDefault(sort = {"id"}, direction = Sort.Direction.DESC) Pageable pageable,
                                 HttpServletRequest httpServletRequest
@@ -125,6 +126,7 @@ public class TravelNoteController {
         httpServletRequest.getSession().setAttribute("originCity", originCity);
         httpServletRequest.getSession().setAttribute("departureDate", departureDate);
         httpServletRequest.getSession().setAttribute("cities", cities);
+        httpServletRequest.getSession().setAttribute("days", numberOfDays);
         return "redirect:/ticket/create/";
     }
 

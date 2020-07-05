@@ -3,7 +3,7 @@
 
 <@c.page>
     <div class="opacity alert alert-primary" role="alert">
-        this is overview information, for more detailed data and ticket purchase, you can visit the
+        This is overview information, for more detailed data and ticket purchase, you can visit the
         site <a href="https://www.aviasales.ru/">aviasales.ru</a>
     </div>
     <div class="card-columns">

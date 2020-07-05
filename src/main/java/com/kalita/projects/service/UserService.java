@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Value("myhostname")
+    @Value("${myhostname}")
     private String host;
 
     public UserService(UserRepo userRepo, MailSender mailSender, @Lazy PasswordEncoder passwordEncoder) {
